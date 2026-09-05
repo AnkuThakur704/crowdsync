@@ -77,6 +77,7 @@ const ques = () => {
       setcurrquesidx(res.idx)
       setcurrques(res.question)
       setislive(true)
+      setvoted(false)
       console.log("question: ",res.question)
     })
   
@@ -97,6 +98,7 @@ const ques = () => {
     console.log("option submitted: ", votedoption)
     socket.emit("incvotecount", {idx: currquesidx, votedoption: votedoption, qid: params_id})
     setvoted(true)
+    setvotedoption(-1)
   }
   return (
     <div className="min-h-screen w-full bg-[#1a1a1a] text-white flex flex-col  items-center justify-center px-4 pt-20 ">
@@ -105,6 +107,7 @@ const ques = () => {
     
     {/* Question */}
     <div className="flex items-start gap-3 mb-6">
+      {voted&&<p className="text-green-500">Voted</p>}
       <div className="flex items-center justify-center w-9 h-9 rounded-full bg-amber-500 text-black font-bold">
         {currquesidx + 1}
       </div>

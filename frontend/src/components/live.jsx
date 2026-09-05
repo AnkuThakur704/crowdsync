@@ -40,10 +40,14 @@ const live = () => {
         console.log("voted: ", data)
         settotalVotes(prev=> prev+1)
         let arr = []
-        data[0].question.options.map((item, key)=>{
+        // data[0].question.options.map((item, key)=>{
+        //   arr.push(item.votes)
+        // })
+        data.question.options.map((item, key)=>{
           arr.push(item.votes)
         })
         setvotes(arr)
+        console.log("data sent on inc votes: ", data)
       })
     
       return () => {

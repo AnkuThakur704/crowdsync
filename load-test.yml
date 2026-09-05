@@ -1,0 +1,24 @@
+config:
+  target: "http://localhost:8080"
+
+
+  phases:
+    - duration: 10
+      arrivalCount: 300
+
+  engines:
+    socketio: {}
+
+scenarios:
+  - name: "CrowdSync participant"
+    engine: socketio
+
+    flow:
+      - emit:
+          channel: "joinroom"
+          data:
+            qid: "f49dc0de-f79a-41a9-ada1-362f2b04e190"
+            username: "{{ $randomString() }}"
+            type: "poll"
+
+      - think: 200

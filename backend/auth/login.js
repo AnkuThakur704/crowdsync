@@ -17,10 +17,9 @@ const login = async (req) => {
         if (result) {
                 //send jwt and redirect(return true)
                 const token = jwt.sign({
-                    exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60),
+                    exp: Math.floor(Date.now() / 1000) + (48 * 60 * 60),
                     data: req.body.email
                 }, secret_key);
-                console.log("jwt: ", token)
                 res = {status: true, token: token}
             }                   
             else {

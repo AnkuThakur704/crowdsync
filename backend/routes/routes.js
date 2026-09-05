@@ -26,7 +26,6 @@ generalRouter.get('/drafts',validateToken,async(req,res)=>{
     console.log("fetching drafts for ", req.email)
     try {
         const alldrafts = await questionmodel.find({author:req.email})
-        console.log(alldrafts)
         res.status(200).json({drafts: alldrafts})
     } catch (error) {
         res.status(500).json({message:"Internal server error"})
