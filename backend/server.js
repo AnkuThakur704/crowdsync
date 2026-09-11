@@ -15,13 +15,13 @@ const app = express()
 const httpserver = http.createServer(app)
 const io = new Server(httpserver,{
     cors:{
-        origin:"*",
-        methods:["GET","POST"]
+        origin:["https://crowdsync-frontend-j3kq.onrender.com", "http://localhost:5173"],
+        methods:["GET","POST"],
     }
 })
 
 app.use(cors({
-    origin: ["*","http://localhost:5173"],
+    origin: ["https://crowdsync-frontend-j3kq.onrender.com","http://localhost:5173"],
     credentials:true
 }))
 app.use(cookieParser())
@@ -40,5 +40,5 @@ socketinitfunc(io)
 connectRedis()
 
 httpserver.listen(port,()=>{
-    console.log(`Server running at: http://localhost:8080`)
+    console.log(`Server running`)
 })
