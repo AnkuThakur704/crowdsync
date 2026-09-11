@@ -26,7 +26,11 @@ authrouter.post("/login", async (req, res) => {
 })
 
 authrouter.post("/logout", (req, res) => {
-    res.clearCookie("sessionToken")
+    res.clearCookie("sessionToken", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none"
+    })
     res.status(200).json({ message: "logged out successfully" })
 })
 
