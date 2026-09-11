@@ -103,175 +103,258 @@ const hostques = () => {
   }
 
   return (
-    <div className="min-h-screen w-full bg-[#1a1a1a] text-white flex flex-col  items-center justify-center px-4 pt-20 ">
-      <ToastContainer/>
+    <div className="min-h-screen w-full bg-white text-gray-900 flex flex-col items-center justify-center px-4 pt-20">
 
-      {metadata.qid != "" ? (
-        <div className="w-full max-w-5xl mx-auto">
+  <ToastContainer/>
 
-          <div className="flex items-center justify-between mb-8">
+  {metadata.qid != "" ? (
+
+    <div className="w-full max-w-5xl mx-auto">
+
+      <div className="flex items-center justify-between mb-8">
+
+        <div>
+          <h1 className="text-4xl font-extrabold tracking-tight mt-2">
+            {metadata.qname}
+          </h1>
+
+          <p className="text-gray-400 mt-2">
+            Waiting for participants to join...
+          </p>
+
+        </div>
+
+
+        <button
+          onClick={()=>endlive(navigate)}
+          className="w-30 border border-red-200 bg-red-50 text-red-600 px-4 py-3 rounded-xl font-semibold hover:bg-red-600 hover:text-white hover:border-red-600 cursor-pointer transition-all duration-300"
+        >
+          End Live
+        </button>
+
+      </div>
+
+
+      {/* <div>
+        <p>Participants</p>
+        {allparticipants.map((item, key)=>
+        <p key={key}>{item.username} {item.status}</p>)}
+      </div> */}
+
+
+      <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-6">
+
+
+        {/* Left Activity Panel */}
+
+        <div className="bg-white border border-gray-200 rounded-2xl p-5 h-full max-h-110 flex flex-col shadow-sm">
+
+          <div className="flex items-center justify-between mb-5">
+
             <div>
-              <h1 className="text-4xl font-bold mt-2">
-                {metadata.qname}
-              </h1>
-
-              <p className="text-gray-400 mt-1">
-                Waiting for participants to join...
-              </p>
+              <h3 className="text-lg font-bold">
+                Live Activity
+              </h3>
             </div>
 
-            <button
-              onClick={()=>endlive(navigate)}
-             className=" w-30 border border-red-500 text-white  px-4 py-3 hover:cursor-pointer hover:border-[#2a2a2a] transition duration-400"
-            >
-              End Live
-            </button>
+            <span className="text-xs text-gray-400 bg-gray-50 border border-gray-100 px-2.5 py-1 rounded-lg">
+              {allparticipants.length} events
+            </span>
+
           </div>
 
-          {/* <div>
-      <p>Participants</p>
-      {allparticipants.map((item, key)=>
-      <p key={key}>{item.username} {item.status}</p>)}
-    </div> */}
 
-          <div className="grid grid-cols-1 lg:grid-cols-[300px_1fr] gap-8">
+          <div className="flex-1 max-h-100 overflow-y-auto space-y-3 pr-2">
 
-            {/* Left Activity Panel */}
-            <div className="bg-[#2a2a2a] border border-white  p-5 h-full max-h-110 flex flex-col">
+            {allparticipants.length === 0 ? (
 
-              <div className="flex items-center justify-between mb-5">
-                <h3 className="text-lg font-semibold">
-                  Live Activity
-                </h3>
+              <p className="text-gray-400 text-center mt-10">
+                Waiting for participants...
+              </p>
 
-                <span className="text-xs text-gray-400">
-                  {allparticipants.length} events
-                </span>
-              </div>
+            ) : (
 
-              <div className="flex-1 max-h-100 overflow-y-auto space-y-3 pr-2">
-                {allparticipants.length === 0 ? (
-                  <p className="text-gray-500 text-center mt-10">
-                    Waiting for participants...
-                  </p>
-                ) : (
-                  allparticipants.map((item, key) => (
-                    <div
-                      key={key}
-                      className="flex items-start gap-3 border-l-2 pl-4 py-2 border-l-green-400"
+              allparticipants.map((item, key) => (
+
+                <div
+                  key={key}
+                  className="flex items-start gap-3 border-l-2 pl-4 py-2 border-l-indigo-200"
+                >
+
+                  <div
+                    className={`mt-2 h-2.5 w-2.5 rounded-full ${
+                      item.status === "joined"
+                        ? "bg-green-500"
+                        : "bg-red-400"
+                    }`}
+                  />
+
+                  <div className="flex-1">
+
+                    <p className="font-semibold text-gray-800">
+                      {item.username}
+                    </p>
+
+                    <p
+                      className={`text-sm ${
+                        item.status === "joined"
+                          ? "text-green-500"
+                          : "text-red-400"
+                      }`}
                     >
-                      <div
-                        className={`mt-2 h-2.5 w-2.5 rounded-full ${item.status === "joined"
-                          ? "bg-green-400"
-                          : "bg-red-400"
-                          }`}
-                      />
+                      {item.status === "joined"
+                        ? "Joined the session"
+                        : "Left the session"}
+                    </p>
 
-                      <div className="flex-1">
-                        <p className="font-medium">
-                          {item.username}
-                        </p>
+                  </div>
 
-                        <p
-                          className={`text-sm ${item.status === "joined"
-                            ? "text-green-400"
-                            : "text-red-400"
-                            }`}
-                        >
-                          {item.status === "joined"
-                            ? "Joined the session"
-                            : "Left the session"}
-                        </p>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
+                </div>
+
+              ))
+
+            )}
+
+          </div>
+
+        </div>
+
+
+        {/* Right Side */}
+
+        <div className="grid md:grid-cols-2 gap-6">
+
+
+          {/* QR Card */}
+
+          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center shadow-sm">
+
+            <div className="mb-6 text-center">
+              <p className="text-xl font-bold text-gray-900">
+                Scan to participate
+              </p>
 
             </div>
 
-            {/* Right Side (YOUR OLD LAYOUT) */}
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm">
 
-              <div className="bg-[#2a2a2a] border border-white  p-8 flex flex-col items-center">
+              <Qrcode
+                value={qrurl}
+                size={220}
+                className="border-8 border-white"
+              />
 
-                <Qrcode value={qrurl} size={220} className="border-8 border-white"/>
+            </div>
 
-                <p className="text-sm text-gray-500 mt-6 text-center break-all">
-                  {qrurl}
+            <p className="text-sm text-gray-400 mt-6 text-center break-all max-w-sm">
+              {qrurl}
+            </p>
+
+          </div>
+
+
+          <div className="flex flex-col gap-5">
+
+
+            {/* Participants Card */}
+
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 relative shadow-sm">
+
+              <button
+                onClick={startques}
+                className="absolute right-4 top-4 w-30 bg-gray-900 text-white px-4 py-3 rounded-xl font-semibold hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-600/20 cursor-pointer transition-all duration-300"
+              >
+                Start {metadata.type}
+              </button>
+
+              <p className="text-gray-400 text-sm">
+                Participants
+              </p>
+
+              <h2 className="text-5xl font-extrabold mt-2 tracking-tight">
+                {count}
+              </h2>
+
+              <p className="text-xs text-green-500 mt-2">
+                ● Live
+              </p>
+
+            </div>
+
+
+            {/* Session Information */}
+
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 space-y-5 shadow-sm">
+
+              <div className="flex flex-col gap-2.5">
+
+                <p className="text-gray-400 text-sm">
+                  QID
+                </p>
+
+                <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 px-2.5 py-1.5 rounded-lg">
+
+                  <p className="font-mono text-sm mt-1 break-all text-gray-600">
+                    {id}
+                  </p>
+
+                  <button
+                    className="text-sm bg-white border border-gray-200 text-gray-600 px-2 py-0.5 rounded-md hover:cursor-copy hover:text-indigo-600 hover:border-indigo-200 transition"
+                    onClick={copyqid}
+                  >
+                    Copy
+                  </button>
+
+                </div>
+
+              </div>
+
+
+              <div>
+
+                <p className="text-gray-400 text-sm">
+                  Author
+                </p>
+
+                <p className="text-lg font-semibold mt-1">
+                  {metadata.author}
                 </p>
 
               </div>
 
-              <div className="flex flex-col gap-5">
 
-                <div className="bg-[#2a2a2a] border border-white  p-6 relative">
+              <div>
 
-                  <button onClick={startques} className="absolute right-4 w-30 border border-green-500 text-white  px-4 py-3 hover:cursor-pointer hover:border-[#2a2a2a] transition duration-400">
-                    Start {metadata.type}
-                  </button>
+                <p className="text-gray-400 text-sm">
+                  Type
+                </p>
 
-                  <p className="text-gray-400 text-sm">
-                    Participants
-                  </p>
-
-                  <h2 className="text-5xl font-bold mt-2">
-                    {count}
-                  </h2>
-
-                </div>
-
-                <div className="bg-[#2a2a2a] border border-white  p-6 space-y-5">
-
-                  <div className="flex flex-col gap-2.5">
-                    <p className="text-gray-400 text-sm">
-                      QID
-                    </p>
-                    <div className="flex items-center gap-1.5 bg-zinc-700 border border-zinc-200 px-2.5 py-0.5 ">
-                      <p className="font-mono text-sm mt-1 break-all">
-                      {id}
-                    </p>
-                    <button className="text-sm bg-zinc-600 border border-zinc-500 px-2 py-0.5 hover:cursor-copy hover:text-zinc-300"  onClick={copyqid}>Copy</button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <p className="text-gray-400 text-sm">
-                      Author
-                    </p>
-
-                    <p className="text-lg mt-1">
-                      {metadata.author}
-                    </p>
-                  </div>
-
-                  <div>
-                    <p className="text-gray-400 text-sm">
-                      Type
-                    </p>
-
-                    <p className="capitalize text-lg mt-1">
-                      {metadata.type}
-                    </p>
-                  </div>
-
-                </div>
+                <p className="capitalize text-lg font-semibold mt-1">
+                  {metadata.type}
+                </p>
 
               </div>
 
             </div>
 
+
           </div>
 
+        </div>
 
-        </div>
-      ) : (
-        <div className="text-red-400 text-center">
-          Something went wrong.
-        </div>
-      )}
+      </div>
 
     </div>
+
+  ) : (
+
+    <div className="text-red-500 text-center">
+      Something went wrong.
+    </div>
+
+  )}
+
+</div>
   )
 }
 

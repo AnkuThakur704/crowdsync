@@ -13,11 +13,16 @@ import Ques from './components/ques'
 import Quizques from './components/quizques'
 import Live from './components/live'
 import Quizlive from './components/quizlive'
+import Pastpolls from './components/past/pastpolls'
+import Viewpastpoll from './components/past/viewpastpoll'
+import Pastquizzes from './components/past/pastquizzes'
+import Viewpastquiz from './components/past/viewpastquiz'
 
 const App = () => {
   return (
     <>
     <Navbar/>
+    
     <Routes>
       <Route path='/' element={<Landing />}></Route>
       <Route path='/signup' element={<Signup />}></Route>
@@ -31,6 +36,10 @@ const App = () => {
       <Route path='/quizques' element={<Quizques/>}></Route>
       <Route path='/live' element={<Live/>}></Route>
       <Route path='/quizlive' element={<Quizlive/>}></Route>
+      <Route path='/pastpolls' element={<Pastpolls/>}></Route>
+      <Route path='/viewpastpoll' element={<Viewpastpoll/>}></Route>
+      <Route path='/pastquizzes' element={<Pastquizzes/>}></Route>
+      <Route path='/viewpastquiz' element={<Viewpastquiz/>}></Route>
     </Routes>
     <Footer/>
     </>

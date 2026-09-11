@@ -3,11 +3,15 @@ import validateToken from '../middleware/validateToken.js'
 import getuserdata from '../helpers/getuserdata.js'
 import savepage from '../helpers/savepage.js'
 import questionmodel from '../db/questionnaires.js'
+import { getpastpolls } from '../helpers/getpastpolls.js'
+import { getpastquizzes } from '../helpers/getpastquizzes.js'
+import { getstats } from '../helpers/helperfunctions.js'
+
 const generalRouter = express.Router()
 
 generalRouter.post('/dashboard',validateToken,async (req, res)=>{
-    console.log("hittt")
-    
+    const stats = await getstats(req.email)
+    res.status(200).json({success:true, stats: stats})
 })
 
 generalRouter.post('/verifyloggedin',validateToken, async (req,res)=>{
@@ -18,8 +22,13 @@ generalRouter.post('/verifyloggedin',validateToken, async (req,res)=>{
 })
 
 generalRouter.post('/savepage',(req,res)=>{
-    console.log("saving qu")
-    savepage(req.body)
+    try {
+        console.log("saving qu")
+        savepage(req.body)
+        res.status(200).json({success:true})
+    } catch (error) {
+        res.status(500).json({success:false, message: "Not able to save work"});
+    }
 })
 
 generalRouter.get('/drafts',validateToken,async(req,res)=>{
@@ -57,6 +66,42 @@ generalRouter.post('/marklive', async(req,res)=>{
 generalRouter.post('/endlive', async(req, res)=>{
     await questionmodel.updateOne({qid: req.body.qid}, {$set:{isLive:false}})
     res.status(200).json({success:true})
+})
+
+generalRouter.get('/getpastpolls', async(req, res)=>{
+    try {
+        const data = await getpastpolls(req, false)
+        res.status(200).json({success:true, pastpolls: data})
+    } catch (error) {
+        res.status(500).res({success:false, message: "Unable to fetch pastpolls at this moment"})
+    }
+})
+
+generalRouter.get('/viewpastpoll', async(req, res)=>{
+    try {
+        const data = await getpastpolls(req, true)
+        res.status(200).json({success:true, polldata: data})
+    } catch (error) {
+        res.status(500).res({success:false, message: "Unable to fetch the poll at this moment"})
+    }
+})
+
+generalRouter.get('/getpastquizzes', async (req, res)=>{
+    try {
+        const data = await getpastquizzes(req, false)
+        res.status(200).json({success:true, pastquizzes:data})
+    } catch (error) {
+        res.status(500).json({success:false, message:"Unable to fetch quizzes at this moment"})
+    }
+})
+
+generalRouter.get('/viewpastquiz', async(req, res)=>{
+    try {
+        const data = await getpastquizzes(req, true)
+        res.status(200).json({success:true, leaderboard: data})
+    } catch (error) {
+        res.status(500).json({success:false, message:"Unable to fetch past quiz at this moment"})
+    }
 })
 
 generalRouter.post('/checkqidandlivestatus',async(req, res)=>{

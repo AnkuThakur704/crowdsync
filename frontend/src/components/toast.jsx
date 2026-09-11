@@ -20,7 +20,7 @@ const notify = (message) =>toast.error(message, {
   pauseOnHover: true,
   draggable: true,
   progress: undefined,
-  theme: "dark",
+  theme: "light",
   })
 
   export default notify

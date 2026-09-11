@@ -69,6 +69,7 @@ const quizques = () => {
             setislive(true)
             setvoted(false)
             settimesup(false)
+            setvotedoption(-1)
             console.log("question: ", res.question)
         })
 
@@ -124,46 +125,99 @@ const quizques = () => {
     }
 
     return (
-        <div className="min-h-screen w-full bg-[#1a1a1a] text-white flex flex-col  items-center justify-center px-4 pt-20 ">
-            {islive ?
-                <div className="w-full max-w-3xl mx-auto">
-                    <div className="border border-white bg-[#2a2a2a] p-8 relative">
+        <div className="min-h-screen w-full bg-white text-gray-900 flex flex-col items-center justify-center px-4 pt-20">
 
-                        <div className="text-gray-400 text-sm tracking-wide uppercase mb-6">Time left: <span className={`${time>5?"text-green-400":"text-red-400"} font-bold`}>{time}</span></div>
-                        {voted&&<p className="text-green-400 absolute right-2 top-4">Your reponse has been recorded</p>}
-                        {/* Question */}
-                        <div className="flex items-start gap-4 mb-8">
-                            <div className="flex items-center justify-center w-9 h-9 shrink-0 border border-white font-bold">
-                                {currquesidx + 1}
+    {islive ?
+        <div className="w-full max-w-3xl mx-auto">
+
+            <div className="relative border border-gray-200 bg-white rounded-3xl p-8 md:p-10 shadow-xl shadow-indigo-100/40">
+
+                {/* Time */}
+                <div className="text-gray-400 text-sm tracking-wide uppercase mb-7">
+                    Time left:{" "}
+                    <span
+                        className={`${time > 5
+                            ? "text-emerald-500"
+                            : "text-red-500"
+                            } font-bold`}
+                    >
+                        {time}
+                    </span>
+                </div>
+
+                {voted &&
+                    <p className="text-emerald-500 text-sm font-medium absolute right-8 top-8">
+                        Your reponse has been recorded
+                    </p>
+                }
+
+                {/* Question */}
+                <div className="flex items-start gap-4 mb-9">
+
+                    <div className="flex items-center justify-center w-10 h-10 shrink-0 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600 font-bold">
+                        {currquesidx + 1}
+                    </div>
+
+                    <p className="text-2xl font-bold text-gray-900 leading-relaxed">
+                        {currques.statement}
+                    </p>
+
+                </div>
+
+
+                {/* Options */}
+                <div className="space-y-3 mb-8">
+
+                    {currques.options.map((item, key) => (
+                        <button
+                            onClick={() => incvotecount(key)}
+                            key={key}
+                            className={`w-full flex items-center gap-4 rounded-xl border ${
+                                (votedoption != -1 && votedoption == key)
+                                    ? "border-indigo-500 bg-indigo-50"
+                                    : "border-gray-200 bg-gray-50"
+                            } px-5 py-4 transition-all duration-300 hover:bg-indigo-50 hover:border-indigo-300 cursor-pointer`}
+                        >
+
+                            <div
+                                className={`flex items-center justify-center w-9 h-9 shrink-0 rounded-lg border font-mono font-semibold ${
+                                    (votedoption != -1 && votedoption == key)
+                                        ? "border-indigo-300 bg-white text-indigo-600"
+                                        : "border-gray-200 bg-white text-gray-500"
+                                }`}
+                            >
+                                {String.fromCharCode(65 + key)}
                             </div>
 
-                            <p className="text-2xl font-semibold text-white leading-relaxed">
-                                {currques.statement}
+                            <p className="text-gray-700 text-lg text-left">
+                                {item.text}
                             </p>
-                        </div>
 
-                        {/* Options */}
-                        <div className="space-y-3 mb-8">
-                            {currques.options.map((item, key) => (
-                                <button onClick={() => incvotecount(key)}
-                                    key={key}
-                                    className={`w-full flex items-center gap-4 border ${(votedoption!=-1&&votedoption==key)?"border-sky-500":"border-zinc-500"} bg-zinc-800 px-5 py-4 transition duration-300  hover:bg-zinc-700 hover:border-white cursor-pointer`}
-                                >
-                                    <div className="flex items-center justify-center w-8 h-8 shrink-0 border border-zinc-400 font-mono font-semibold">
-                                        {String.fromCharCode(65+key)}
-                                    </div>
+                        </button>
+                    ))}
 
-                                    <p className="text-zinc-100 text-lg text-left">{item.text}</p>
-                                </button>
-                            ))}
-                        </div>
-
-                        <button disabled={timesup||voted}  className={`${timesup||voted?"hover:cursor-not-allowed opacity-50":"hover:cursor-pointer"} w-full border border-green-500 text-white px-4 py-3 hover:border-[#2a2a2a] transition duration-400`} onClick={submitvote}>Submit</button>
-                    </div>
                 </div>
-                : <Participantlobby leaveroom={leaveroom} qdata={qdata} count={count} />
-            }
+
+
+                <button
+                    disabled={timesup || voted}
+                    className={`${
+                        timesup || voted
+                            ? "hover:cursor-not-allowed opacity-50 bg-gray-900"
+                            : "hover:cursor-pointer bg-gray-900 hover:bg-indigo-600"
+                    } w-full text-white font-semibold px-4 py-3.5 rounded-xl transition-all duration-300 shadow-sm`}
+                    onClick={submitvote}
+                >
+                    Submit
+                </button>
+
+            </div>
+
         </div>
+        : <Participantlobby leaveroom={leaveroom} qdata={qdata} count={count} />
+    }
+
+</div>
     )
 }
 

@@ -1,5 +1,9 @@
 import questionmodel from "../db/questionnaires.js"
 import redisClient from "../redis/redisInit.js"
+import pastpollsmodel from "../db/pastpolls.js"
+import pastquizzesmodel from "../db/pastquizzes.js"
+
+
 const socketinitfunc = (io) => {
     const hostsmap = new Map()
     const votedmap = new Map()
@@ -50,16 +54,35 @@ const socketinitfunc = (io) => {
             io.to(qid).emit("updateparticipantscount", count != 0 ? count - 1 : 0)
         })
 
-        socket.on("endpoll",async (qid) => {
+        socket.on("endpoll", async (qid) => {
             io.to(qid).emit("pollended")
             hostsmap.delete(qid)
             votedmap.delete(qid)
-            if (scoremap.get(qid)) scoremap.delete(qid)
+            // let polldata = await redisClient.get(`${qid}`)
+            // polldata = JSON.parse(polldata)
+            // polldata.isLive = false
+            // polldata.currentquestion = -1
+            // await questionmodel.replaceOne({qid : qid},polldata);
+            // this was for updating the votes in the questionnaire db, but I will make a separate db for the polls/ quizzes that have already happened, so that the host can host the same poll multiple times
+            await questionmodel.updateOne({ qid: qid }, { $set: { isLive: false } });
             let polldata = await redisClient.get(`${qid}`)
             polldata = JSON.parse(polldata)
-            polldata.isLive = false
-            polldata.currentquestion = -1
-            await questionmodel.replaceOne({qid : qid},polldata);
+            if (polldata.type == "poll") {
+                const instances = await pastpollsmodel.find({ qid: qid })
+                let instance = instances.length + 1;
+                polldata.instance = instance;
+                delete polldata._id
+                await pastpollsmodel.insertOne(polldata);
+            }
+            else {
+                const instances = await pastquizzesmodel.find({ qid: qid })
+                let instance = instances.length + 1;
+                const scores = scoremap.get(qid)
+                const temp = [...scores].sort((a, b) => b[1] - a[1])
+                const leaderboard = temp.map((item, idx) => { return { username: item[0], score: item[1] } })
+                await pastquizzesmodel.insertOne({qid: qid,instance: instance, qname: polldata.qname, author: polldata.author, leaderboard: leaderboard})
+            }
+            if (scoremap.get(qid)) scoremap.delete(qid)
             await redisClient.del(`${qid}`);
         })
 
@@ -69,11 +92,11 @@ const socketinitfunc = (io) => {
             let ques = {}  // this is where I fetch questions
 
             const cachepoll = await redisClient.get(`${qid}`)
-            if(!cachepoll){
+            if (!cachepoll) {
                 ques = await questionmodel.findOne({ qid: qid })
                 if (!ques) return;
                 await redisClient.set(`${qid}`, JSON.stringify(ques), {
-                    exp: 60*10
+                    exp: 60 * 10
                 })
             }
             else ques = JSON.parse(cachepoll)
@@ -82,26 +105,11 @@ const socketinitfunc = (io) => {
             if (!ques) return;
             const size = ques.pages.length
             const idx = ques.currentquestion + 1
-
-            console.log(
-        "GIVEQUESTION:",
-        "next idx =", idx,
-        "size =", size
-    )
-
             if (idx === size) {
                 io.to(hostid).emit("queshasended")
                 return
             }
             ques.currentquestion = idx;
-
-console.log(
-        "GIVEQUESTION:",
-        "saved currentquestion =", ques.currentquestion,
-        "Q votes =",
-        ques.pages[idx].options.map(o => o.votes)
-    )
-
             await redisClient.set(`${qid}`, JSON.stringify(ques))
             // await questionmodel.updateOne({ qid: qid }, { $set: { currentquestion: idx } })  // i update the index currently fetch question
             // const afterUpdate = performance.now();   /////////
@@ -133,32 +141,16 @@ console.log(
             let cachepoll = await redisClient.get(`${reqbd.qid}`)
             cachepoll = JSON.parse(cachepoll)
 
- console.log(
-        "BEFORE:",
-        "idx =", reqbd.idx,
-        "option =", reqbd.votedoption,
-        "votes =",
-        cachepoll.pages[reqbd.idx].options[reqbd.votedoption].votes
-    )
-
             if (votedmap.get(reqbd.qid) != null && votedmap.get(reqbd.qid)[reqbd.idx].has(socket.id)) return
             votedmap.get(reqbd.qid)[reqbd.idx].add(socket.id)
             // await questionmodel.updateOne({ qid: reqbd.qid }, { $inc: { [`pages.${reqbd.idx}.options.${reqbd.votedoption}.votes`]: 1 } })
             cachepoll.pages[reqbd.idx].options[reqbd.votedoption].votes++;
 
- console.log(
-        "AFTER:",
-        "idx =", reqbd.idx,
-        "option =", reqbd.votedoption,
-        "votes =",
-        cachepoll.pages[reqbd.idx].options[reqbd.votedoption].votes
-    )
-
             // const data = await questionmodel.aggregate([{ $match: { qid: reqbd.qid } },
             // { $project: { question: { $arrayElemAt: ["$pages", reqbd.idx] } } }
             // ])
-            io.to(hostsmap.get(reqbd.qid)).emit("someonevoted", {question:cachepoll.pages[reqbd.idx]})
-            await redisClient.set(`${reqbd.qid}`, 
+            io.to(hostsmap.get(reqbd.qid)).emit("someonevoted", { question: cachepoll.pages[reqbd.idx] })
+            await redisClient.set(`${reqbd.qid}`,
                 JSON.stringify(cachepoll)
             )
             console.log("inc vote count for", reqbd.idx)
@@ -172,18 +164,23 @@ console.log(
         })
 
         socket.on("checkans", async (reqbd) => {
-            if (timermap.get(reqbd.qid)) return
+            if (timermap.get(reqbd.qid)) return  // if its true => time's up
             const option = reqbd.option
             const username = reqbd.username
             const qid = reqbd.qid
-            const idx = await questionmodel.findOne({ qid: qid }, { currentquestion: 1 })
-            const qdata = await questionmodel.aggregate([{ $match: { qid: qid } }, { $project: { question: { $arrayElemAt: ["$pages", idx.currentquestion] } } }])
+            let quizdata = await redisClient.get(`${qid}`)
+            quizdata = JSON.parse(quizdata)
+            const idx = quizdata.currentquestion
+            const correctans = quizdata.pages[idx].correct
+            // const idx = await questionmodel.findOne({ qid: qid }, { currentquestion: 1 })
+            // const qdata = await questionmodel.aggregate([{ $match: { qid: qid } }, { $project: { question: { $arrayElemAt: ["$pages", idx.currentquestion] } } }])
             //qdata.question.correct
-            console.log("q data: ", qdata)
-            if (qdata[0].question.correct === option) {
+            // console.log("q data: ", qdata)
+            if (correctans === option) {
                 const prevscore = scoremap.get(qid).get(username)
                 scoremap.get(qid).set(username, prevscore + 10)
             }
+            //qdata[0].question.correct
         })
 
         socket.on("giveleaderboard", (qid) => {

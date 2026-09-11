@@ -78,6 +78,7 @@ const ques = () => {
       setcurrques(res.question)
       setislive(true)
       setvoted(false)
+      setvotedoption(-1)
       console.log("question: ",res.question)
     })
   
@@ -101,42 +102,70 @@ const ques = () => {
     setvotedoption(-1)
   }
   return (
-    <div className="min-h-screen w-full bg-[#1a1a1a] text-white flex flex-col  items-center justify-center px-4 pt-20 ">
-      {islive?<div className="w-full max-w-3xl mx-auto">
-  <div className="rounded-2xl border border-amber-500/20 bg-zinc-900/70 backdrop-blur-md shadow-xl p-6">
-    
-    {/* Question */}
-    <div className="flex items-start gap-3 mb-6">
-      {voted&&<p className="text-green-500">Voted</p>}
-      <div className="flex items-center justify-center w-9 h-9 rounded-full bg-amber-500 text-black font-bold">
-        {currquesidx + 1}
-      </div>
+    <div className="min-h-screen w-full bg-white text-gray-900 flex flex-col items-center justify-center px-4 pt-20">
 
-      <p className="text-xl font-semibold text-white leading-relaxed">
-        {currques.statement}
-      </p>
-    </div>
+    {islive ? <div className="w-full max-w-3xl mx-auto">
 
-    {/* Options */}
-    <div className="space-y-3">
-      {currques.options.map((item, key) => (
-        <button onClick={()=>incvotecount(key)}
-          key={key}
-          className="flex items-center gap-4 rounded-xl border border-zinc-700 bg-zinc-800/60 px-4 py-3 transition-all duration-200 active:border-amber-500 hover:bg-zinc-800 cursor-pointer"
-        >
-          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-zinc-700 text-amber-400 font-semibold">
-            {key + 1}
-          </div>
+        <div className="rounded-3xl border border-gray-200 bg-white shadow-xl shadow-indigo-100/40 p-7 md:p-9">
 
-          <p className="text-zinc-100">{item.text}</p>
-        </button>
-      ))}
-    </div>
+            {/* Question */}
 
-    <button onClick={submitvote}>Submit</button>
-  </div>
-</div>:<Participantlobby leaveroom={leaveroom} qdata={qdata} count={count}/>}
-    </div>
+            <div className="flex items-start gap-4 mb-8">
+
+                {voted && <p className="text-green-500 text-sm font-semibold mt-2">
+                    Voted
+                </p>}
+
+                <div className="flex items-center justify-center shrink-0 w-10 h-10 rounded-xl bg-indigo-600 text-white font-bold shadow-sm">
+                    {currquesidx + 1}
+                </div>
+
+                <p className="text-xl md:text-2xl font-bold text-gray-900 leading-relaxed">
+                    {currques.statement}
+                </p>
+
+            </div>
+
+
+            {/* Options */}
+
+            <div className="space-y-3">
+
+                {currques.options.map((item, key) => (
+
+                    <button
+                        onClick={()=>incvotecount(key)}
+                        key={key}
+                        className="w-full flex items-center gap-4 rounded-xl border border-gray-200 bg-gray-50 px-4 py-4 text-left transition-all duration-200 hover:bg-indigo-50 hover:border-indigo-300 hover:shadow-sm active:border-indigo-500 cursor-pointer"
+                    >
+
+                        <div className="flex items-center justify-center shrink-0 w-9 h-9 rounded-lg bg-white border border-gray-200 text-indigo-600 font-semibold">
+                            {key + 1}
+                        </div>
+
+                        <p className="text-gray-700 font-medium">
+                            {item.text}
+                        </p>
+
+                    </button>
+
+                ))}
+
+            </div>
+
+
+            <button
+                onClick={submitvote}
+                className="w-full mt-8 py-3.5 rounded-xl bg-gray-900 text-white font-semibold hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-600/20 cursor-pointer transition-all duration-300"
+            >
+                Submit
+            </button>
+
+        </div>
+
+    </div> : <Participantlobby leaveroom={leaveroom} qdata={qdata} count={count}/>}
+
+</div>
   )
 }
 

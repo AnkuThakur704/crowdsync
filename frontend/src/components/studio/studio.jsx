@@ -60,23 +60,64 @@ const studio = () => {
 
 
     return (
-        <div className="h-full w-full min-h-screen bg-[#1f1f1f] text-white flex items-center justify-center px-6 relative overflow-hidden pt-20 z-0">
-            {isloading ? <Loadinganim /> : <>{component === "none" ? <div className="w-150 h-80 border border-white/20 bg-white/10 p-5 flex flex-col items-center gap-10 pt-15">
-            <Quicknav/>
-                <p className="text-2xl text-amber-300">What do you want to host today?</p>
+        <div className="h-full w-full min-h-screen bg-white text-gray-900 flex items-center justify-center px-6 relative overflow-hidden pt-20 z-0">
 
-                <input onChange={(e) => setqname(e.target.value)} type="text" placeholder="Name your questionnaire" className="px-5 py-2 w-100 focus:outline-none border border-white focus:border-amber-300" required spellCheck={false} />
-                <div className="flex gap-20">
-                    <button type="button" onClick={loadpoll} className="px-5 py-3 border border-white/20 text-sm hover:border-amber-300">
-                        Create a poll
-                    </button>
-                    <button type="button" onClick={loadquiz} className="px-5 py-3 border border-white/20 text-sm hover:border-amber-300">
-                        Create a quiz
-                    </button>
-                </div>
-            </div> : <div>{component === "poll" ? <Poll qname={qname} qidofdraft={qid} /> : <div><Quiz qname={qname} qidofdraft={qid} /></div>}</div>}</>}
+    {isloading ? <Loadinganim /> : <>
 
-        </div>
+        {component === "none" ? <div className="relative w-full max-w-2xl min-h-[380px] bg-white border border-gray-200 rounded-3xl p-8 md:p-12 flex flex-col items-center justify-center gap-8 shadow-xl shadow-indigo-100/40">
+
+            <Quicknav />
+
+            {/* subtle background glow */}
+
+            <div className="absolute w-72 h-72 bg-indigo-100/50 blur-3xl rounded-full -top-32 -right-32 pointer-events-none"></div>
+
+            <div className="absolute w-64 h-64 bg-violet-100/40 blur-3xl rounded-full -bottom-32 -left-32 pointer-events-none"></div>
+
+
+            <div className="relative z-10 text-center">
+                <p className="text-3xl md:text-4xl font-extrabold tracking-[-0.04em] text-gray-900">
+                    What do you want to host today?
+                </p>
+
+            </div>
+
+
+            <input
+                onChange={(e) => setqname(e.target.value)}
+                type="text"
+                placeholder="Name your questionnaire"
+                className="relative z-10 px-5 py-3.5 w-full max-w-lg bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 transition"
+                required
+                spellCheck={false}
+            />
+
+
+            <div className="relative z-10 flex flex-col sm:flex-row gap-4 w-full max-w-lg">
+
+                <button
+                    type="button"
+                    onClick={loadpoll}
+                    className="flex-1 px-5 py-3.5 bg-gray-900 text-white rounded-xl font-semibold hover:bg-indigo-600 hover:shadow-lg hover:shadow-indigo-600/20 transition-all duration-300 cursor-pointer"
+                >
+                    Create a poll
+                </button>
+
+                <button
+                    type="button"
+                    onClick={loadquiz}
+                    className="flex-1 px-5 py-3.5 bg-white text-gray-700 rounded-xl border border-gray-200 font-semibold hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-600 transition-all duration-300 cursor-pointer"
+                >
+                    Create a quiz
+                </button>
+
+            </div>
+
+        </div> : <div>{component === "poll" ? <Poll qname={qname} qidofdraft={qid} /> : <div><Quiz qname={qname} qidofdraft={qid} /></div>}</div>}
+
+    </>}
+
+</div>
     )
 }
 

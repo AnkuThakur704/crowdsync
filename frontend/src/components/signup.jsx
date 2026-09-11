@@ -55,172 +55,246 @@ theme: "dark",
     
   return (
     <>
+  <div className="min-h-screen bg-white flex items-center justify-center text-gray-900 px-6 relative overflow-hidden pt-20">
 
-    <div className="min-h-screen bg-[#1f1f1f] flex items-center justify-center text-white px-6 relative overflow-hidden pt-20">
-      
-      <ToastContainer />
-      {loading?<div><LoadingAnim/> </div>:<div>
-        <div className="absolute w-125 h-125 bg-amber-300/10 blur-3xl rounded-full -top-40 -left-40"></div>
+    <ToastContainer />
 
-      <div className="absolute w-125 h-125 bg-yellow-500/10 blur-3xl rounded-full bottom-0 right-0"></div>
-
-      
-      <div className="w-full max-w-5xl grid lg:grid-cols-2 bg-[#2b2b2b]/80 backdrop-blur-xl border border-amber-200/10 rounded-[40px] overflow-hidden shadow-2xl shadow-black/50 z-10">
-        
-        
-        <div className="hidden lg:flex flex-col justify-center p-16 border-r border-amber-200/10 relative">
-          
-          <div className="absolute inset-0 bg-linear-to-br from-amber-300/5 to-transparent"></div>
-
-          <div className="relative z-10">
-            <h1 className="text-6xl font-black leading-tight text-white">
-              Sign up quickly
-            </h1>
-
-            <p className="text-white mt-8 text-lg leading-relaxed max-w-md">
-              Create polls, host quizzes, engage audiences, and
-              visualize live responses in real time.
-            </p>
-
-            
-            <div className="mt-14 space-y-6">
-              
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12  border border-amber-400 flex items-center justify-center  font-bold">
-                  1
-                </div>
-
-                <div>
-                  <p className="font-semibold text-lg ">
-                    Create Live Polls
-                  </p>
-
-                  <p className="text-gray-400 text-sm">
-                    Launch interactive polls instantly.
-                  </p>
-                </div>
-              </div>
-
-              
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 border border-amber-400  flex items-center justify-center  font-bold">
-                  2
-                </div>
-
-                <div>
-                  <p className="font-semibold text-lg">
-                    Host Real-Time Quizzes
-                  </p>
-
-                  <p className="text-gray-400 text-sm">
-                    Engage audiences with competition.
-                  </p>
-                </div>
-              </div>
-
-              
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 border border-amber-400 flex items-center justify-center  font-bold">
-                  3
-                </div>
-
-                <div>
-                  <p className="font-semibold text-lg">
-                    Analyze Audience Insights
-                  </p>
-
-                  <p className="text-gray-400 text-sm">
-                    Track trends with live analytics.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        
-        
-        <div className="p-10 md:p-14 flex flex-col justify-center">
-          
-          <div className="mb-10">
-            <h2 className="text-4xl font-black">
-              Create Account
-            </h2>
-
-            <p className="text-gray-400 mt-3">
-              Start building interactive live experiences.
-            </p>
-          </div>
-
-          
-          <form className="space-y-6" onSubmit={handlesubmit}>
-            
-            <div>
-              <label className="text-sm text-gray-300 mb-2 block">
-                Full Name
-              </label>
-
-              <input
-                onChange={(e)=>setformdata({...formdata,name:e.target.value})}
-                type="text"
-                placeholder="Enter your name"
-                required
-                className="w-full bg-[#1f1f1f] border border-amber-200/10 focus:border-amber-300 outline-none rounded-2xl px-5 py-4 text-white transition"
-              />
-            </div>
-
-            
-            <div>
-              <label className="text-sm text-gray-300 mb-2 block">
-                Email Address
-              </label>
-
-              <input
-              onChange={(e)=>setformdata({...formdata,email:e.target.value})}
-                type="email"
-                placeholder="Enter your email"
-                required
-                className="w-full bg-[#1f1f1f] border border-amber-200/10 focus:border-amber-300 outline-none rounded-2xl px-5 py-4 text-white transition"
-              />
-            </div>
-
-            
-            <div>
-              <label className="text-sm text-gray-300 mb-2 block">
-                Password
-              </label>
-
-              <input
-              onChange={(e)=>setformdata({...formdata,password:e.target.value})}
-                type="password"
-                placeholder="Create a password"
-                required
-                className="w-full bg-[#1f1f1f] border border-amber-200/10 focus:border-amber-300 outline-none rounded-2xl px-5 py-4 text-white transition"
-              />
-            </div>
-
-            
-            <button
-              type="submit"
-              className="w-full bg-amber-300 hover:bg-amber-200 text-[#2b2b2b] font-bold py-4 rounded-2xl transition duration-300 shadow-lg shadow-amber-300/20"
-            >
-              Create Account
-            </button>
-          </form>
-
-          <p className="text-gray-400 text-center mt-8">
-            Already have an account?{" "} 
-            
-            <Link
-              to="/login"
-              className="text-amber-300 hover:text-amber-200 transition"
-            >
-              Login
-            </Link>
-          </p>
-        </div>
+    {loading ? (
+      <div>
+        <LoadingAnim />
       </div>
-      </div>}
-    </div></>
+    ) : (
+      <div>
+
+        {/* Background decoration */}
+
+        <div className="absolute w-[500px] h-[500px] bg-indigo-100/60 blur-3xl rounded-full -top-40 -left-40"></div>
+
+        <div className="absolute w-[500px] h-[500px] bg-violet-100/50 blur-3xl rounded-full bottom-0 right-0"></div>
+
+
+        {/* Main container */}
+
+        <div className="w-full max-w-5xl grid lg:grid-cols-2 bg-white border border-gray-200 rounded-[32px] overflow-hidden shadow-2xl shadow-gray-900/10 z-10">
+
+
+          {/* Left side */}
+
+          <div className="hidden lg:flex flex-col justify-center p-16 border-r border-gray-100 relative">
+
+            <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/70 via-white to-transparent"></div>
+
+            <div className="relative z-10">
+
+              <div className="mb-8">
+
+                <p className="text-sm font-bold tracking-tight text-gray-900">
+                  Crowd<span className="text-indigo-600">Sync</span>
+                </p>
+
+                <div className="w-10 h-1 bg-indigo-600 rounded-full mt-3"></div>
+
+              </div>
+
+
+              <h1 className="text-5xl font-extrabold tracking-[-0.04em] leading-[1.05] text-gray-900">
+                Make every
+                <br />
+                voice <span className="text-indigo-600">count.</span>
+              </h1>
+
+
+              <p className="text-gray-500 mt-7 text-lg leading-relaxed max-w-md">
+                Create polls, host quizzes, engage audiences, and
+                visualize live responses in real time.
+              </p>
+
+
+              <div className="mt-12 space-y-7">
+
+
+                {/* Feature 1 */}
+
+                <div className="flex items-center gap-4">
+
+                  <div className="w-11 h-11 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
+                    1
+                  </div>
+
+                  <div>
+                    <p className="font-semibold text-base text-gray-900">
+                      Create Live Polls
+                    </p>
+
+                    <p className="text-gray-400 text-sm mt-1">
+                      Launch interactive polls instantly.
+                    </p>
+                  </div>
+
+                </div>
+
+
+                {/* Feature 2 */}
+
+                <div className="flex items-center gap-4">
+
+                  <div className="w-11 h-11 rounded-xl bg-violet-50 border border-violet-100 flex items-center justify-center text-violet-600 font-bold">
+                    2
+                  </div>
+
+                  <div>
+                    <p className="font-semibold text-base text-gray-900">
+                      Host Real-Time Quizzes
+                    </p>
+
+                    <p className="text-gray-400 text-sm mt-1">
+                      Engage audiences with competition.
+                    </p>
+                  </div>
+
+                </div>
+
+
+                {/* Feature 3 */}
+
+                <div className="flex items-center gap-4">
+
+                  <div className="w-11 h-11 rounded-xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600 font-bold">
+                    3
+                  </div>
+
+                  <div>
+                    <p className="font-semibold text-base text-gray-900">
+                      Analyze Audience Insights
+                    </p>
+
+                    <p className="text-gray-400 text-sm mt-1">
+                      Track trends with live analytics.
+                    </p>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+
+
+          {/* Right side */}
+
+          <div className="p-10 md:p-14 flex flex-col justify-center">
+
+            <div className="mb-9">
+
+              <p className="text-sm font-semibold text-indigo-600 mb-3">
+                Get started
+              </p>
+
+              <h2 className="text-4xl font-extrabold tracking-[-0.03em] text-gray-900">
+                Create Account
+              </h2>
+
+              <p className="text-gray-400 mt-3">
+                Start building interactive live experiences.
+              </p>
+
+            </div>
+
+
+            <form className="space-y-5" onSubmit={handlesubmit}>
+
+
+              {/* Full Name */}
+
+              <div>
+
+                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Full Name
+                </label>
+
+                <input
+                  onChange={(e)=>setformdata({...formdata,name:e.target.value})}
+                  type="text"
+                  placeholder="Enter your name"
+                  required
+                  className="w-full bg-gray-50 border border-gray-200 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 outline-none rounded-xl px-5 py-3.5 text-gray-900 placeholder:text-gray-400 transition duration-200"
+                />
+
+              </div>
+
+
+              {/* Email */}
+
+              <div>
+
+                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Email Address
+                </label>
+
+                <input
+                  onChange={(e)=>setformdata({...formdata,email:e.target.value})}
+                  type="email"
+                  placeholder="Enter your email"
+                  required
+                  className="w-full bg-gray-50 border border-gray-200 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 outline-none rounded-xl px-5 py-3.5 text-gray-900 placeholder:text-gray-400 transition duration-200"
+                />
+
+              </div>
+
+
+              {/* Password */}
+
+              <div>
+
+                <label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Password
+                </label>
+
+                <input
+                  onChange={(e)=>setformdata({...formdata,password:e.target.value})}
+                  type="password"
+                  placeholder="Create a password"
+                  required
+                  className="w-full bg-gray-50 border border-gray-200 focus:border-indigo-500 focus:bg-white focus:ring-4 focus:ring-indigo-500/10 outline-none rounded-xl px-5 py-3.5 text-gray-900 placeholder:text-gray-400 transition duration-200"
+                />
+
+              </div>
+
+
+              {/* Submit */}
+
+              <button
+                type="submit"
+                className="w-full bg-gray-900 hover:bg-indigo-600 text-white font-semibold py-3.5 rounded-xl transition duration-300 shadow-lg shadow-gray-900/10 hover:shadow-indigo-600/20 cursor-pointer"
+              >
+                Create Account
+              </button>
+
+            </form>
+
+
+            <p className="text-gray-400 text-sm text-center mt-7">
+
+              Already have an account?{" "}
+
+              <Link
+                to="/login"
+                className="text-indigo-600 font-semibold hover:text-indigo-700 transition"
+              >
+                Login
+              </Link>
+
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+    )}
+
+  </div>
+</>
   );
 }
