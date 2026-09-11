@@ -72,7 +72,7 @@ const live = () => {
 
     {currques!=null?<div className="w-full rounded-3xl border border-gray-200 bg-white p-8 shadow-xl shadow-indigo-100/40">
 
-        <div className="absolute right-10 top-10 flex items-center gap-3">
+        <div className="absolute right-10 top-25 flex items-center gap-3">
 
     <button
         onClick={getquestion}

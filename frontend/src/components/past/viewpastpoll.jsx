@@ -87,7 +87,7 @@ const viewpastpoll = () => {
 
                     <div className="flex items-center gap-1.5 mb-6">
                         <p className="text-xl font-semibold text-indigo-600">
-                            {polldata.pages[idx].id + 1}.
+                            {polldata.pages[idx].id}.
                         </p>
 
                         <p className="text-xl font-semibold text-gray-800">
